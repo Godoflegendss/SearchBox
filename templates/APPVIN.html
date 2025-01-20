@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Lookup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 1em;
+        }
+        form {
+            background-color: #fff;
+            padding: 2em;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+        }
+        label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            text-align: left;
+            margin-bottom: 0.5em;
+        }
+        select, input[type="submit"] {
+            padding: 0.75em;
+            margin-top: 0.5em;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1em;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        select:focus, input[type="submit"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        a {
+            display: inline-block;
+            margin-top: 1em;
+            padding: 0.75em 1.5em;
+            color: white;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 600px) {
+            form {
+                padding: 1.5em;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            select, input[type="submit"], a {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+    <script>
+        function CustomerName() {
+            var version = document.getElementById("version").value;
+            fetch('/CustomerName', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ versionInfo: version })
+            })
+            .then(response => response.json())
+            .then(data => {
+                var customerName = document.getElementById("customerName");
+                customerName.innerHTML = '';
+                data.forEach(function(item) {
+                    var option = document.createElement("option");
+                    option.value = item;
+                    option.text = item;
+                    customerName.appendChild(option);
+                });
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Extension Lookup</h1>
+    <form method="post" action="{{ url_for('appResult') }}">
+        <label for="version">Choose the environment version:</label>
+        <select id="version" name="version" onchange="CustomerName()">
+            <option value="">Select a version</option>
+            {% for value in versions %}
+                <option value="{{ value }}">{{ value }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <label for="customerName">Choose the Customer Name:</label>
+        <select id="customerName" name="customerName">
+            <option value="">Select the customer</option>
+        </select>
+        <br><br>
+        <input type="submit" value="Validate Extension">
+        <br><br>
+        <a href="/">Home Page</a>
+    </form>
+</body>
+</html>

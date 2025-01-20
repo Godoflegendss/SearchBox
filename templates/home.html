@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F&B Tech Hub - Home</title>
+    <style>
+        /* Apply flexbox layout */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fff9db, #fce76b);
+        }
+
+        /* Header Styling */
+        header {
+            background-color: #f5c400;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 10vh; /* Header takes 10% of the viewport height */
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header img {
+            border-radius: 50%;
+            background-color: white;
+            padding: 0.5em;
+            width: 8vmin; /* Adjusts with viewport */
+            height: 8vmin;
+        }
+        header h1 {
+            font-size: 3vmin; /* Font size scales with viewport */
+            margin-left: 1em;
+        }
+
+        /* Main Content Styling */
+        main {
+            flex: 1; /* Main content takes the remaining space */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2em;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            width: 90%;
+            max-width: 700px;
+        }
+
+        /* Ensure main content is centered */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+        }
+
+        main h1 {
+            font-size: 3vmin; /* Font size scales dynamically */
+            margin-bottom: 1.5em;
+        }
+        main p {
+            font-size: 2vmin;
+            margin-bottom: 1.5em;
+        }
+        a {
+            font-size: 2vmin;
+            color: #ffffff;
+            background-color: #f5c400;
+            padding: 0.75em 2em;
+            margin: 0.75em;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        a:hover {
+            background-color: #d4a300;
+            transform: translateY(-4px);
+        }
+
+        /* Footer Styling */
+        footer {
+            flex: 0 0 6vh; /* Footer takes 6% of the viewport height */
+            width: 100%;
+            background-color: #f5c400;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5vmin;
+            padding: 1em 0;
+            text-align: center;
+        }
+
+        /* Responsive Media Queries */
+        @media (max-width: 768px) {
+            header img {
+                width: 10vmin;
+                height: 10vmin;
+            }
+            header h1 {
+                font-size: 4vmin;
+            }
+            main h1 {
+                font-size: 4vmin;
+            }
+            main p, a {
+                font-size: 3vmin;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header img {
+                width: 12vmin;
+                height: 12vmin;
+            }
+            header h1 {
+                font-size: 5vmin;
+            }
+            main h1 {
+                font-size: 5vmin;
+            }
+            main p, a {
+                font-size: 4vmin;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="{{ url_for('static', filename='Aptean Tech Hub logo with a major yellow theme, attractive and professional, showing specialization in cloud technology.png') }}" alt="F&B Tech Hub Logo">
+        <h1>F&B Tech Hub</h1>
+    </header>
+
+    <main>
+        <h1>Welcome to the F&B Tech Hub</h1>
+        <p>Please select an option below to continue:</p>
+        <a href="/LicenseValidate">License Lookup</a>
+        <a href="/appvalidation">Extension Validation</a>
+        <a href="/Outagecheck">Web Lookup</a>
+    </main>
+
+    <footer>
+        &copy; 2024 F&B Tech Hub. All rights reserved.
+    </footer>
+
+</body>
+</html>

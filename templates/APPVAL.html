@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Metadata</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        h1, h2 {
+            color: #fbc02d;  /* Major yellow theme */
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            max-width: 1000px;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+        }
+        th {
+            background-color: #fbc02d;  /* Yellow header */
+            color: white;
+            font-weight: bold;
+            border-bottom: 2px solid #ddd;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        td {
+            border-bottom: 1px solid #ddd;
+        }
+        .status-true {
+            background-color: #d4edda; /* Light green for true */
+            font-weight: bold;
+        }
+        .status-false {
+            background-color: #f8d7da; /* Light red for false */
+            font-weight: bold;
+        }
+        a {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #fbc02d;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #e8a00d;
+        }
+        @media (max-width: 600px) {
+            table, th, td {
+                font-size: 0.9em;
+            }
+            a {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Application Metadata for Server: {{ CN }}</h1>
+    <h2>Version: {{ version }}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>APPNAME</th>
+                <th>APP Version</th>
+                <th>Publisher</th>
+                <th>Extension Data Version</th>
+                <th>Sync State</th>
+                <th>Published State</th>
+                <th>Installation State</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+            <tr>
+                <td>{{ result[1] }}</td>  <!-- APPNAME -->
+                <td>{{ result[2] }}</td>  <!-- APPVersion -->
+                <td>{{ result[3] }}</td>  <!-- Publisher -->
+                <td>{{ result[4] }}</td>  <!-- Extension Data Version -->
+                <td class="{% if result[5] == 'Synced' %}status-true{% else %}status-false{% endif %}">
+                    {{ result[5] }}  <!-- Sync State -->
+                </td>
+                <td class="{% if result[6] == 'True' %}status-true{% else %}status-false{% endif %}">
+                    {{ result[6] }}  <!-- Published State -->
+                </td>
+                <td class="{% if result[7] == 'True' %}status-true{% else %}status-false{% endif %}">
+                    {{ result[7] }}  <!-- Installation State -->
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/">Home Page</a>
+</body>
+</html>

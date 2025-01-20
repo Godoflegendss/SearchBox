@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Metadata</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        h1, h2 {
+            color: #fbc02d;  /* Major yellow color */
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #fbc02d;  /* Yellow header */
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .status-true {
+            background-color: #d4edda; /* Light green */
+            font-weight: bold;
+        }
+        .status-false {
+            background-color: #f8d7da; /* Light red */
+            font-weight: bold;
+        }
+        a {
+            display: inline-block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #fbc02d;  /* Yellow button */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+        a:hover {
+            background-color: #e8a00d;  /* Darker yellow on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>Application Metadata for Server: {{ CN }}</h1>
+    <h2>Version: {{ version }}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ServerInstance</th>
+                <th>Server</th>
+                <th>State</th>
+                <th>Webclient</th>
+                <th>Odata URL</th>
+                <th>Odata State</th>
+                <th>Soap base URL</th>
+                <th>Soap State</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+            <tr>
+                <td>{{ result[0] }}</td>
+                <td>{{ result[1] }}</td>
+                <td>{{ result[2] }}</td> 
+                <td>{{ result[5] }}</td>
+                <td>{{ result[6] }}</td>
+                <td class="{% if result[7] == 'True' %}status-true{% else %}status-false{% endif %}">
+                    {{ result[7] }} 
+                </td>
+                <td>{{ result[8] }}</td>
+                <td class="{% if result[9] == 'True' %}status-true{% else %}status-false{% endif %}">
+                    {{ result[9] }} 
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/">Home Page</a>
+</body>
+</html>

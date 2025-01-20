@@ -1,0 +1,17 @@
+click==8.1.7
+colorama==0.4.6
+Flask==2.2.2
+gunicorn==22.0.0
+itsdangerous==2.2.0
+Jinja2==3.1.4
+MarkupSafe==2.1.5
+packaging==24.1
+pyodbc==5.1.0
+Werkzeug==2.2.2
+azure.storage.blob
+requests==2.26.0
+flask-socketio
+msal==1.21.0
+flask_session
+config
+
