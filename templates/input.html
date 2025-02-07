@@ -3,132 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>License Lookup</title>
+    <title>Search - F&B Tech Hub</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+        /* Apply flexbox layout */
+        html, body {
             margin: 0;
             padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fff9db, #fce76b);
+            align-items: center;
+        }
+
+        /* Header Styling */
+        header {
+            background-color: #f5c400;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 10vh;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header img {
+            border-radius: 50%;
+            background-color: white;
+            padding: 0.5em;
+            width: 8vmin;
+            height: 8vmin;
+        }
+        header h1 {
+            font-size: 3vmin;
+            margin-left: 1em;
+        }
+
+        /* Centered Search Box */
+        .search-container {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            width: 100%;
+        }
+
+        /* Search Box Styling */
+        form {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #f5c400;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #d4a300;
+        }
+
+        /* Dropdown Styling */
+        .dropdown-content {
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 200px;
+            display: none;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+            top: 50px;
+        }
+
+        .dropdown-content p {
+            padding: 10px;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .dropdown-content p:hover {
+            background-color: #f5c400;
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            flex: 0 0 6vh;
+            width: 100%;
+            background-color: #f5c400;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5vmin;
+            padding: 1em 0;
             text-align: center;
         }
-        h1 {
-            color: #333;
-            font-size: 2em;
-            margin-bottom: 1em;
-        }
-        form {
-            background-color: #fff;
-            padding: 2em;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
-            width: 100%;
-            max-width: 500px;
-        }
-        label {
-            font-weight: bold;
-            color: #555;
-            display: block;
-            text-align: left;
-            margin-bottom: 0.5em;
-        }
-        select, input[type="submit"] {
-            padding: 0.75em;
-            margin-top: 0.5em;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1em;
-            width: 100%;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-        }
-        select:focus, input[type="submit"]:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-        input[type="submit"] {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-        a {
-            display: inline-block;
-            margin-top: 1em;
-            padding: 0.75em 1.5em;
-            color: white;
-            background-color: #007bff;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: background-color 0.3s ease;
-        }
-        a:hover {
-            background-color: #0056b3;
-        }
-        @media (max-width: 600px) {
-            form {
-                padding: 1.5em;
-            }
-            h1 {
-                font-size: 1.8em;
-            }
-            select, input[type="submit"], a {
-                font-size: 0.9em;
-            }
-        }
     </style>
-    <script>
-        function CustomerName() {
-            var version = document.getElementById("version").value;
-            fetch('/CustomerName', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({ versionInfo: version })
-            })
-            .then(response => response.json())
-            .then(data => {
-                var customerName = document.getElementById("customerName");
-                customerName.innerHTML = '';
-                data.forEach(function(item) {
-                    var option = document.createElement("option");
-                    option.value = item;
-                    option.text = item;
-                    customerName.appendChild(option);
-                });
-            });
-        }
-    </script>
 </head>
 <body>
-    <h1>License Lookup</h1>
-    <form method="post" action="{{ url_for('Result') }}">
-        <label for="version">Choose the environment version:</label>
-        <select id="version" name="version" onchange="CustomerName()">
-            <option value="">Select a version</option>
-            {% for value in versions %}
-                <option value="{{ value }}">{{ value }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
-        <label for="customerName">Choose the Customer Name:</label>
-        <select id="customerName" name="customerName">
-            <option value="">Select the customer</option>
-        </select>
-        <br><br>
-        <input type="submit" value="Verify License">
-        <br><br>
-        <a href="/">Home Page</a>
-    </form>
+
+    <header>
+        <img src="{{ url_for('static', filename='Aptean Tech Hub logo with a major yellow theme, attractive and professional, showing specialization in cloud technology.png') }}" alt="F&B Tech Hub Logo">
+        <h1>F&B Tech Hub</h1>
+    </header>
+
+    <div class="search-container">
+        <form id="searchForm" action="/SearchResult" method="Get">
+            <input type="text" id="searchQuery" name="CustomerName" placeholder="Search..." onkeyup="searchDatabase()" autocomplete="off">
+            <div id="suggestions" class="dropdown-content"></div>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <footer>
+        &copy; 2024 F&B Tech Hub. All rights reserved.
+    </footer>
+
+    <script>
+        function searchDatabase() {
+            let query = document.getElementById('searchQuery').value;
+            let dropdown = document.getElementById('suggestions');
+            if (query.length > 2) { // Start searching after 2 characters
+                fetch(`/recommend?q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        dropdown.innerHTML = "";
+                        dropdown.style.display = "block";
+                        if (data.results.length === 0) {
+                            dropdown.innerHTML = "<p>No suggestions</p>";
+                        } else {
+                            data.results.forEach(item => {
+                                let p = document.createElement("p");
+                                p.textContent = item;
+                                p.onclick = function() {
+                                    document.getElementById('searchQuery').value = item;
+                                    dropdown.style.display = "none";
+                                };
+                                dropdown.appendChild(p);
+                            });
+                        }
+                    });
+            } else {
+                dropdown.style.display = "none";
+            }
+        }
+
+        document.addEventListener("click", function(event) {
+            let dropdown = document.getElementById('suggestions');
+            if (!event.target.matches("#searchQuery")) {
+                dropdown.style.display = "none";
+            }
+        });
+    </script>
+
 </body>
 </html>

@@ -23,17 +23,17 @@ password = 'Thechanger@123'
 driver = '{ODBC Driver 18 for SQL Server}'
 
 connection_string = f'Driver={driver};Server={server};Database={database};Uid={username};Pwd={password};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
-conn = pyodbc.connect(connection_string)
 
 
 def fetch_dropdownvalues():
-   
+   conn = pyodbc.connect(connection_string)
    cursor = conn.cursor()
    cursor.execute('SELECT DISTINCT Version FROM Metadata')  # Adjust your query
    dropdown_items = cursor.fetchall()
    return [row[0] for row in dropdown_items]
 
 def CustomerNamesInfo(version):
+   conn = pyodbc.connect(connection_string)
    cursor = conn.cursor()
    print(version)
    Query="SELECT DISTINCT ServerInstance FROM Metadata where version = ?"
@@ -78,71 +78,112 @@ def GetVMName(CustomerName,Version):
 def index():
     return render_template('home.html')
 
+
+
 @app.route('/appvalidation')
 def appversion():
-   versions=fetch_dropdownvalues()
-   return render_template('APPVIN.html',versions= versions)
+   return render_template('AppSearch.html')
 
-@app.route('/appCustomerName', methods=['POST'])
-def appinput():
-   version= request.json.get('versionInfo')
-   CustomerNames=CustomerNamesInfo(version)
-   return jsonify(CustomerNames)
+@app.route('/ASearchResult', methods=['GET'])
+def ASearchResult():
+    CN = request.args.get('CustomerName', '').strip()
 
-@app.route('/appResult',methods=['POST'])
-def appResult():
-   CN=request.form.get('customerName')
-   version= request.form.get('version')
-   cursor = conn.cursor()
-   query = "SELECT * FROM AppMetadata where ServerInstance = ? and version = ?"
-   cursor.execute(query,CN,version)
-   data = cursor.fetchall()
-   cursor.close()
-   return render_template('AppVAL.html',CN =CN, results=data, version=version)
+    if not CN:
+        return render_template('index.html', error="Please enter a valid ServerInstance.")
+
+    conn = pyodbc.connect(connection_string)
+    cursor = conn.cursor()
+
+    conn = pyodbc.connect(connection_string)
+    cursor = conn.cursor()
+    query = "SELECT * FROM AppMetadata where ServerInstance = ?"
+    cursor.execute(query,CN)
+    data = cursor.fetchall()
+    query="SELECT Version FROM Metadata WHERE ServerInstance = ?"
+    cursor.execute(query, (CN,))
+    version=cursor.fetchone()
+    cursor.close()
+    return render_template('AppVAL.html',CN =CN, results=data, version=version)
+
+
 
 
 @app.route('/LicenseValidate')
 def version():
-   versions=fetch_dropdownvalues()
-   return render_template('input.html',versions= versions)
+    return render_template('LicenseSearch.html')
 
-@app.route('/CustomerName', methods=['POST'])
-def input():
-   version= request.json.get('versionInfo')
-   CustomerNames=CustomerNamesInfo(version)
-   return jsonify(CustomerNames)
+@app.route('/recommend')
+def recommend():
+    query = request.args.get('q', '').strip()
+    
+    if not query:
+        return jsonify(results=[])
 
-@app.route('/Result',methods=['POST'])
-def Result():
-   CN=request.form.get('customerName')
-   version= request.form.get('version')
-   cursor = conn.cursor()
-   query = "SELECT LicenseInfo FROM Metadata where ServerInstance = ? and version = ?"
-   cursor.execute(query,CN,version)
-   data = cursor.fetchone()
-   data=format_license_info(data[0])
-   return render_template('index.html',CN =CN, data=data, version=version)
+    conn = pyodbc.connect(connection_string)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT ServerInstance FROM Metadata WHERE ServerInstance LIKE ?", ('%' + query + '%',))
+    
+    results = [row[0] for row in cursor.fetchall()]
+    
+    conn.close()
+    
+    return jsonify(results=results)
+
+@app.route('/LSearchResult', methods=['GET'])
+def LSearchResult():
+    CN = request.args.get('CustomerName', '').strip()
+
+    if not CN:
+        return render_template('index.html', error="Please enter a valid ServerInstance.")
+
+    conn = pyodbc.connect(connection_string)
+    cursor = conn.cursor()
+
+    query = "SELECT LicenseInfo FROM Metadata WHERE ServerInstance = ?"
+    print(query)
+    cursor.execute(query, (CN,))
+    data = cursor.fetchone()
+    query="SELECT Version FROM Metadata WHERE ServerInstance = ?"
+    cursor.execute(query, (CN,))
+    version=cursor.fetchone()
+    conn.close()
+
+    if not data:
+        return render_template('index.html', CN=CN, data="No data found.")
+
+    formatted_data = format_license_info(data[0])
+    
+    return render_template('index.html', CN=CN, data=formatted_data,version=version)
+
+
+
+
+
+
+
 
 @app.route('/Outagecheck')
 def webversion():
-   versions=fetch_dropdownvalues()
-   return render_template('WEBIN.html',versions= versions)
-@app.route('/WebCustomerName', methods=['POST'])
-def webcustomer():
-   version= request.json.get('versionInfo')
-   CustomerNames=CustomerNamesInfo(version)
-   return jsonify(CustomerNames)
+   return render_template('WEBIN.html')
 
-@app.route('/weblookup',methods=['POST'])
+
+@app.route('/WSearchResult',methods=['Get'])
 def weblookup():
-   CN=request.form.get('customerName')
-   version= request.form.get('version')
+   print("!!!!")
+   CN = request.args.get('CustomerName', '').strip()
+   if not CN:
+        return render_template('index.html', error="Please enter a valid ServerInstance.")
+   conn = pyodbc.connect(connection_string)
    cursor = conn.cursor()
-   query="SELECT ServerInstance,Server,State,DatabaseName,DatabaseServer,Webclient,Odataurl,Odatastate,Soapurl,Soapstate FROM Metadata where ServerInstance = ? and version = ?"
-   cursor.execute(query,CN,version)
+   query="SELECT ServerInstance,Server,State,DatabaseName,DatabaseServer,Webclient,Odataurl,Odatastate,Soapurl,Soapstate FROM Metadata where ServerInstance = ?"
+   cursor.execute(query,CN)
    rows = cursor.fetchall()
+   print(rows)
+   query="SELECT Version FROM Metadata WHERE ServerInstance = ?"
+   cursor.execute(query, CN)
+   version=cursor.fetchone()
    return render_template('Weblookup.html',CN=CN,results=rows,version=version)
-
 
 if __name__ == '__main__':
     app.run(debug=True,port=5000)
